@@ -255,7 +255,7 @@ class GXDLMSObjectCollection(list):
         xml_bytes = ET.tostring(objects, encoding="utf-8", method="xml")
         # Muuta merkkijonoksi ja tulosta tarkastelua varten
         xml_str = xml_bytes.decode("utf-8")
-        print(repr(xml_str))  # repr näyttää myös piilomerkit kuten \n, \t jne.
+        print(repr(xml_str))
 
 
         str_ = minidom.parseString(
