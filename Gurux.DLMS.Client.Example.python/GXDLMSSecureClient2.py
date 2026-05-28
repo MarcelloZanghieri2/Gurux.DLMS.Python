@@ -44,9 +44,14 @@ from gurux_dlms.asn.GXx509Certificate import GXx509Certificate
 from gurux_dlms.objects.enums.SecuritySuite import SecuritySuite
 from gurux_dlms.objects.enums.CertificateType import CertificateType
 from gurux_dlms.GXByteBuffer import GXByteBuffer
+from gurux_dlms.compression.IGXCompressionNotifier import IGXCompressionNotifier
+from gurux_dlms.compression.enums.CompressionOperation import CompressionOperation
+from gurux_dlms.GXByteBuffer import GXByteBuffer
 
 
-class GXDLMSSecureClient2(GXDLMSSecureClient, IGXCryptoNotifier):
+class GXDLMSSecureClient2(
+    GXDLMSSecureClient, IGXCryptoNotifier, IGXCompressionNotifier
+):
     #
     # Constructor.
     #
@@ -156,3 +161,21 @@ class GXDLMSSecureClient2(GXDLMSSecureClient, IGXCryptoNotifier):
         sender : The source of the event.
         args : Event arguments.
         """
+        pass
+
+    def onCompression(self, args):
+        """Called when V.44 compression is used.
+        data : Compression options.
+        """
+        if args.operation == CompressionOperation.COMPRESS:
+            # Compress data using GXV44 compression.
+            # This is just an example, you can use any compression method you like.
+            # encoder = GXV44Encoder()
+            # e.outputData = encoder.compress(e.inputData)
+            pass
+        else:
+            # Decompress data using GXV44 compression.
+            # This is just an example, you can use any compression method you like.
+            # decoder = GXV44Decoder()
+            # e.outputData = decoder.decompress(e.inputData)
+            pass

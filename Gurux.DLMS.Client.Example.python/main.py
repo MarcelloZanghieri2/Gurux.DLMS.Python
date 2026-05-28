@@ -104,6 +104,10 @@ class sampleclient:
                 settings.trace,
                 settings.invocationCounter,
             )
+            # Enable Compression:
+            # Add compression package to onCompression event handler when compression is needed.
+            # settings.client.compressionOptions.enableCompression = True
+
             settings.media.open()
             # Export client and server certificates from the meter.
             if settings.exportSecuritySetupLN:

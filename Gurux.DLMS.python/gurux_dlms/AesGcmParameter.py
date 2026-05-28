@@ -85,5 +85,5 @@ class AesGcmParameter:
         self.xml = None
         # System title is not send on pre-established connecions.
         self.ignoreSystemTitle = False
-        self.broacast = False
+        self.broadcast = False
         self.compression = False

@@ -51,6 +51,8 @@ from .IGXCryptoNotifier import IGXCryptoNotifier
 from .objects.enums.CertificateType import CertificateType
 from .GXCryptoKeyParameter import GXCryptoKeyParameter
 from .enums.ObjectType import ObjectType
+from .compression.IGXCompressionNotifier import IGXCompressionNotifier
+from .compression.GXCompressionOptions import GXCompressionOptions
 
 
 # This class includes DLMS communication settings.
@@ -168,9 +170,12 @@ class GXDLMSSettings:
         # Assigned association for the server.
         self.__assignedAssociation = None
 
+        # compression options.
+        self.compressionOptions = GXCompressionOptions()
+
         ###Event listeners.
         self.__listeners = []
-        if isinstance(parent, IGXCryptoNotifier):
+        if isinstance(parent, (IGXCryptoNotifier, IGXCompressionNotifier)):
             self.__listeners.append(parent)
 
     #
@@ -184,7 +189,16 @@ class GXDLMSSettings:
     #
     def _onPduEventHandler(self, complete, data):
         for it in self.__listeners:
-            it.onPduEventHandler(it, complete, data)
+            if isinstance(it, IGXCryptoNotifier):
+                it.onPduEventHandler(it, complete, data)
+
+    #
+    # Notify client from decrypted PDU.
+    #
+    def _onCompression(self, args):
+        for it in self.__listeners:
+            if isinstance(it, IGXCompressionNotifier):
+                it.onCompression(args)
 
     #
     # @param value

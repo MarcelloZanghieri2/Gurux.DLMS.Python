@@ -81,6 +81,8 @@ from .plc.enums import (
     PlcSourceAddress,
     PlcDestinationAddress,
 )
+from .compression.GXCompressionArgs import GXCompressionArgs
+from .compression.enums.CompressionOperation import CompressionOperation
 
 
 # pylint: disable=too-many-public-methods,too-many-function-args
@@ -625,7 +627,7 @@ class GXDLMS:
             GXDLMS.addLLCBytes(p.settings, reply)
 
     @classmethod
-    def cipher0(cls, p, data):
+    def __getCipheringParameters(cls, p):
         cmd = 0
         key = None
         cipher = p.settings.cipher
@@ -658,8 +660,49 @@ class GXDLMS:
         s.security = cipher.security
         s.securitySuite = cipher.securitySuite
         s.invocationCounter = cipher.invocationCounter
+        return s
+
+    @classmethod
+    def __decompress(cls, settings, tmp):
+        if settings._onCompression:
+            args = GXCompressionArgs(
+                CompressionOperation.DECOMPRESS,
+                settings.compressionOptions,
+                tmp,
+            )
+            settings._onCompression(args)
+            if args.operation != CompressionOperation.DECOMPRESS:
+                raise Exception("Decompression was not successful.")
+            return args.outputData
+        raise Exception("Data is compressed but compression handler is not defined.")
+
+    @classmethod
+    def __compress(cls, settings, tmp):
+        if settings._onCompression:
+            args = GXCompressionArgs(
+                CompressionOperation.COMPRESS,
+                settings.compressionOptions,
+                tmp,
+            )
+            settings._onCompression(args)
+            if args.operation != CompressionOperation.COMPRESS:
+                # Id data is not compressed.
+                return None
+            return args.outputData
+        raise Exception("Data compression failed. Compression handler is not defined.")
+
+    @classmethod
+    def cipher0(cls, p, data):
+        s = cls.__getCipheringParameters(p)
+        if p.settings.compressionOptions.enableCompression:
+            tmp4 = cls.__compress(p.settings, data)
+            if tmp4:
+                # If data is compressed, set compression bit to security control.
+                data = tmp4
+                s.compression = True
+
         tmp = GXCiphering.encrypt(s, data)
-        cipher.invocationCounter = cipher.invocationCounter + 1
+        p.settings.cipher.invocationCounter = p.settings.cipher.invocationCounter + 1
         return tmp
 
     @classmethod
@@ -2909,7 +2952,10 @@ class GXDLMS:
                         settings.cipher.blockCipherKey,
                         settings.cipher.authenticationKey,
                     )
-                data.data.set(GXCiphering.decrypt(settings, p, bb))
+                tmp = GXCiphering.decrypt(settings, p, bb)
+                if p.compression:
+                    tmp = cls.__decompress(settings, tmp)
+                data.data.set(tmp)
                 # pylint: disable=W0212
                 settings._onPduEventHandler(data.moreData == 0, data.data.array())
                 data.cipheredCommand = data.command
@@ -2933,6 +2979,9 @@ class GXDLMS:
             tmp = GXCiphering.decrypt(settings, p, data.data)
             # pylint: disable=W0212
             settings._onPduEventHandler(data.moreData == 0, tmp)
+            if p.compression:
+                tmp = cls.__decompress(settings, tmp)
+
             data.data.clear()
             data.data.set(tmp)
             data.command = Command.NONE

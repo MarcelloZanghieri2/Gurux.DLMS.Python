@@ -40,6 +40,9 @@ from .internal._GXCommon import _GXCommon
 from .enums.Command import Command
 from .enums.CryptoKeyType import CryptoKeyType
 from .enums.Standard import Standard
+from .GXDLMSExceptionResponse import GXDLMSExceptionResponse
+from .enums import StateError, ExceptionServiceError
+
 
 # pylint: disable=too-many-instance-attributes,too-many-public-methods
 class GXDLMSChippering:
@@ -66,7 +69,7 @@ class GXDLMSChippering:
         p.countTag = None
         data = GXByteBuffer()
         tag = p.security | p.securitySuite
-        if p.broacast:
+        if p.broadcast:
             tag |= 0x40
         if p.compression:
             tag |= 0x80
@@ -78,7 +81,7 @@ class GXDLMSChippering:
         tmp[1] = (invocationCounter >> 16) & 0xFF
         tmp[2] = (invocationCounter >> 8) & 0xFF
         tmp[3] = invocationCounter & 0xFF
-        aad = cls.getAuthenticatedData(p, plainText)
+        aad = cls.getAuthenticatedData(p, tag, plainText)
         iv = cls.getNonse(invocationCounter, p.systemTitle)
         gcm = GXDLMSChipperingStream(p.security, True, p.blockCipherKey, aad, iv, None)
         #  Encrypt the secret message
@@ -127,9 +130,8 @@ class GXDLMSChippering:
         return crypted
 
     @classmethod
-    def getAuthenticatedData(cls, p, plainText):
+    def getAuthenticatedData(cls, p, sc, plainText):
         data = GXByteBuffer()
-        sc = p.security | p.securitySuite
         if p.security == Security.AUTHENTICATION:
             data.setUInt8(sc)
             data.set(p.authenticationKey)
@@ -183,7 +185,11 @@ class GXDLMSChippering:
                 data.get(title)
                 p.systemTitle = title
                 if p.xml and p.xml.comments:
-                    p.xml.appendComment(_GXCommon.systemTitleToString(Standard.DLMS, p.systemTitle, True))
+                    p.xml.appendComment(
+                        _GXCommon.systemTitleToString(
+                            Standard.DLMS, p.systemTitle, True
+                        )
+                    )
         elif cmd in (
             Command.GENERAL_CIPHERING,
             Command.GLO_INITIATE_REQUEST,
@@ -272,6 +278,31 @@ class GXDLMSChippering:
         security = (Security)(sc & 0x30)
         p.securitySuite = (SecuritySuite)(sc & 0x3)
         p.security = security
+        if sc & 0x80 != 0:
+            print("Compression is used.")
+            p.compression = True
+        if sc & 0x40 != 0:
+            print("Broacast is used.")
+            if p.xml == None and p.settings.cipher.broadcastBlockCipherKey == None:
+                raise GXDLMSExceptionResponse(
+                    StateError.SERVICE_NOT_ALLOWED,
+                    ExceptionServiceError.DECIPHERING_ERROR,
+                    0,
+                )
+            p.broacast = True
+            p.blockCipherKey = p.settings.cipher.broadcastBlockCipherKey
+        if sc & 0x20 != 0:
+            print("Encryption is applied.")
+        if sc & 0x10 != 0:
+            print("Authentication is applied.")
+        if value != 0 and p.vml != None and kp.Key == None:
+            return p.cipheredContent
+            if cmd == Command.GENERAL_SIGNING and p.security != Security.NONE:
+                if not (p.xml != None and (kp.value == None or kp.Key == None)):
+                    if kp.value != None:
+                        print("Private signing key: " + kp.value.ToHex())
+                    if kp.key != None:
+                        print("Public signing key: " + kp.key.ToHex())
         invocationCounter = data.getUInt32()
         p.invocationCounter = invocationCounter
         if not p.authenticationKey or not p.blockCipherKey:
@@ -317,7 +348,12 @@ class GXDLMSChippering:
             ciphertext = bytearray(len_)
             data.get(ciphertext)
             data.get(tag)
-        aad = cls.getAuthenticatedData(p, ciphertext)
+        sc = p.security | p.securitySuite
+        if p.broadcast:
+            sc |= 0x40
+        if p.compression:
+            sc |= 0x80
+        aad = cls.getAuthenticatedData(p, sc, ciphertext)
         iv = cls.getNonse(invocationCounter, p.systemTitle)
         gcm = GXDLMSChipperingStream(security, True, p.blockCipherKey, aad, iv, tag)
         gcm.write(ciphertext)

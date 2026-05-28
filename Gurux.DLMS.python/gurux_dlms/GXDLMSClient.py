@@ -191,6 +191,17 @@ class GXDLMSClient(object):
     #
     serverAddress = property(__getServerAddress, __setServerAddress)
 
+    @property
+    def compressionOptions(self):
+        """
+        Gets the compression options used for data transmission.
+        """
+        return self.settings.compressionOptions
+
+    @compressionOptions.setter
+    def compressionOptions(self, value):
+        self.settings.compressionOptions = value
+
     def getServerAddressSize(self):
         return self.settings.serverAddressSize
 
