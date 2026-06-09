@@ -102,6 +102,7 @@ from .objects.GXDLMSFunctionControl import GXDLMSFunctionControl
 from .objects.GXDLMSG3Plc6LoWPan import GXDLMSG3Plc6LoWPan
 from .objects.GXDLMSLteMonitoring import GXDLMSLteMonitoring
 from .objects.GXDLMSCommunicationPortProtection import GXDLMSCommunicationPortProtection
+from .objects.GXDLMSArrayManager import GXDLMSArrayManager
 
 
 class _GXObjectFactory:
@@ -244,6 +245,8 @@ class _GXObjectFactory:
             ret = GXDLMSLteMonitoring()
         elif ot == ObjectType.COMMUNICATION_PORT_PROTECTION:
             ret = GXDLMSCommunicationPortProtection()
+        elif ot == ObjectType.ARRAY_MANAGER:
+            ret = GXDLMSArrayManager()
         else:
             ret = GXDLMSObject(ot)
         return ret

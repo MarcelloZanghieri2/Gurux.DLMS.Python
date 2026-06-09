@@ -155,3 +155,6 @@ from .GXDLMSLteMonitoring import GXDLMSLteMonitoring
 from .GXLteNetworkParameters import GXLteNetworkParameters
 from .GXLteQualityOfService import GXLteQualityOfService
 from .GXDLMSCommunicationPortProtection import GXDLMSCommunicationPortProtection
+from .GXDLMSTargetObject import GXDLMSTargetObject
+from .GXDLMSArrayManagerItem import GXDLMSArrayManagerItem
+from .GXDLMSArrayManager import GXDLMSArrayManager

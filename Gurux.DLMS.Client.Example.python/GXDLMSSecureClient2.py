@@ -48,6 +48,8 @@ from gurux_dlms.compression.IGXCompressionNotifier import IGXCompressionNotifier
 from gurux_dlms.compression.enums.CompressionOperation import CompressionOperation
 from gurux_dlms.GXByteBuffer import GXByteBuffer
 
+# Compress data using GXV44 compression.
+# from gurux_compression import GXV44Decoder, GXV44Encoder
 
 class GXDLMSSecureClient2(
     GXDLMSSecureClient, IGXCryptoNotifier, IGXCompressionNotifier
@@ -170,12 +172,14 @@ class GXDLMSSecureClient2(
         if args.operation == CompressionOperation.COMPRESS:
             # Compress data using GXV44 compression.
             # This is just an example, you can use any compression method you like.
+            print(GXByteBuffer.hex(args.inputData, False))
             # encoder = GXV44Encoder()
-            # e.outputData = encoder.compress(e.inputData)
+            # args.outputData = encoder.compress(args.inputData)
             pass
         else:
             # Decompress data using GXV44 compression.
             # This is just an example, you can use any compression method you like.
+            print(GXByteBuffer.hex(args.inputData, False))
             # decoder = GXV44Decoder()
-            # e.outputData = decoder.decompress(e.inputData)
+            # args.outputData = decoder.decompress(args.inputData)
             pass
