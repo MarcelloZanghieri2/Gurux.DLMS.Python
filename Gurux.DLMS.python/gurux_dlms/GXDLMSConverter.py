@@ -423,6 +423,10 @@ class GXDLMSConverter:
             ret = "RegisterMonitor"
         elif ot == ObjectType.REGISTER_TABLE:
             ret = "RegisterTable"
+        elif ot == ObjectType.DATA_PROTECTION:
+            ret = "DataProtection"
+        elif ot == ObjectType.WIRELESS_MODE_Q_CHANNEL:
+            ret = "WirelessModeQchannel"
         elif ot == ObjectType.ZIG_BEE_SAS_STARTUP:
             ret = "ZigBeeSasStartup"
         elif ot == ObjectType.ZIG_BEE_SAS_JOIN:
@@ -461,6 +465,10 @@ class GXDLMSConverter:
             ret = "ParameterMonitor"
         elif ot == ObjectType.TOKEN_GATEWAY:
             ret = "Token"
+        elif ot == ObjectType.IEC_6205541_ATTRIBUTES:
+            ret = "IEC6205541Attributes"
+        elif ot == ObjectType.ARRAY_MANAGER:
+            ret = "ArrayManager"
         elif ot == ObjectType.GSM_DIAGNOSTIC:
             ret = "GSMDiagnostic"
         elif ot == ObjectType.COMPACT_DATA:
@@ -485,16 +493,42 @@ class GXDLMSConverter:
             ret = "NtpSetup"
         elif ot == ObjectType.FUNCTION_CONTROL:
             ret = "FunctionControl"
+        elif ot == ObjectType.SFSK_PHY_MAC_SETUP:
+            ret = "SFSKPhyMacSetUp"
+        elif ot == ObjectType.SFSK_ACTIVE_INITIATOR:
+            ret = "SFSKActiveInitiator"
+        elif ot == ObjectType.SFSK_MAC_SYNCHRONIZATION_TIMEOUTS:
+            ret = "SFSKMacSynchronizationTimeouts"
+        elif ot == ObjectType.SFSK_MAC_COUNTERS:
+            ret = "SFSKMacCounters"
+        elif ot == ObjectType.IEC_61334_4_32_LLC_SETUP:
+            ret = "Iec61334_4_32LlcSetup"
+        elif ot == ObjectType.S_FSK_REPORTING_SYSTEM_LIST:
+            ret = "SFSKReportingSystemList"
+        elif ot == ObjectType.ARBITRATOR:
+            ret = "Arbitrator"
         elif ot == ObjectType.G3_PLC_MAC_SETUP:
             ret = "G3PlcMacSetup"
         elif ot == ObjectType.G3_PLC_MAC_LAYER_COUNTERS:
             ret = "G3PlcMacLayerCounters"
         elif ot == ObjectType.G3_PLC6_LO_WPAN:
             ret = "G3Plc6LoWPan"
-        elif ot == ObjectType.G3_PLC6_LO_WPAN:
-            ret = "G3Plc6LoWPan"
+        elif ot == ObjectType.COMMUNICATION_PORT_PROTECTION:
+            ret = "CommunicationPortProtection"
         elif ot == ObjectType.LTE_MONITORING:
             ret = "GXDLMSLteMonitoring"
+        elif ot == ObjectType.COAP_SETUP:
+            ret = "CoAPSetup"
+        elif ot == ObjectType.COAP_DIAGNOSTIC:
+            ret = "CoAPDiagnostic"
+        elif ot == ObjectType.G3_PLC_HYBRID_RF_MAC_LAYER_COUNTERS:
+            ret = "G3PlcHybridRfMacLayerCounters"
+        elif ot == ObjectType.G3_PLC_HYBRID_RF_MAC_SETUP:
+            ret = "G3PlcHybridRfMacSetup"
+        elif ot == ObjectType.G3_PLC_HYBRID_6LOWPAN_ADAPTATION_LAYER_SETUP:
+            ret = "G3PlcHybrid6LoWPANAdaptationLayerSetup"
+        elif ot == ObjectType.TARIFF_PLAN:
+            ret = "TariffPlan"
         else:
             ret = "ManufactureSpesific."
         return ret
@@ -563,6 +597,10 @@ class GXDLMSConverter:
             ot = ObjectType.REGISTER_MONITOR
         elif value == "RegisterTable":
             ot = ObjectType.REGISTER_TABLE
+        elif value == "DataProtection":
+            ot = ObjectType.DATA_PROTECTION
+        elif value == "WirelessModeQchannel":
+            ot = ObjectType.WIRELESS_MODE_Q_CHANNEL
         elif value == "ZigBeeSasStartup":
             ot = ObjectType.ZIG_BEE_SAS_STARTUP
         elif value == "ZigBeeSasJoin":
@@ -601,6 +639,10 @@ class GXDLMSConverter:
             ot = ObjectType.PARAMETER_MONITOR
         elif value in ("Token", "TokenGateway"):
             ot = ObjectType.TOKEN_GATEWAY
+        elif value == "IEC6205541Attributes":
+            ot = ObjectType.IEC_6205541_ATTRIBUTES
+        elif value == "ArrayManager":
+            ot = ObjectType.ARRAY_MANAGER
         elif value == "GSMDiagnostic":
             ot = ObjectType.GSM_DIAGNOSTIC
         elif value == "CompactData":
@@ -625,14 +667,42 @@ class GXDLMSConverter:
             ot = ObjectType.NTP_SETUP
         elif value == "FunctionControl":
             ot = ObjectType.FUNCTION_CONTROL
+        elif value == "SFSKPhyMacSetUp":
+            ot = ObjectType.SFSK_PHY_MAC_SETUP
+        elif value == "SFSKActiveInitiator":
+            ot = ObjectType.SFSK_ACTIVE_INITIATOR
+        elif value == "SFSKMacSynchronizationTimeouts":
+            ot = ObjectType.SFSK_MAC_SYNCHRONIZATION_TIMEOUTS
+        elif value == "SFSKMacCounters":
+            ot = ObjectType.SFSK_MAC_COUNTERS
+        elif value == "Iec61334_4_32LlcSetup":
+            ot = ObjectType.IEC_61334_4_32_LLC_SETUP
+        elif value == "SFSKReportingSystemList":
+            ot = ObjectType.S_FSK_REPORTING_SYSTEM_LIST
+        elif value == "Arbitrator":
+            ot = ObjectType.ARBITRATOR
         elif value == "G3PlcMacSetup":
             ot = ObjectType.G3_PLC_MAC_SETUP
         elif value == "G3PlcMacLayerCounters":
             ot = ObjectType.G3_PLC_MAC_LAYER_COUNTERS
         elif value == "G3Plc6LoWPan":
             ot = ObjectType.G3_PLC6_LO_WPAN
+        elif value == "CommunicationPortProtection":
+            ot = ObjectType.COMMUNICATION_PORT_PROTECTION
         elif value == "GXDLMSLteMonitoring":
             ot = ObjectType.LTE_MONITORING
+        elif value == "CoAPSetup":
+            ot = ObjectType.COAP_SETUP
+        elif value == "CoAPDiagnostic":
+            ot = ObjectType.COAP_DIAGNOSTIC
+        elif value == "G3PlcHybridRfMacLayerCounters":
+            ot = ObjectType.G3_PLC_HYBRID_RF_MAC_LAYER_COUNTERS
+        elif value == "G3PlcHybridRfMacSetup":
+            ot = ObjectType.G3_PLC_HYBRID_RF_MAC_SETUP
+        elif value == "G3PlcHybrid6LoWPANAdaptationLayerSetup":
+            ot = ObjectType.G3_PLC_HYBRID_6LOWPAN_ADAPTATION_LAYER_SETUP
+        elif value == "TariffPlan":
+            ot = ObjectType.TARIFF_PLAN
         else:
             ot = ObjectType.NONE
         return ot
