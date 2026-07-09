@@ -1,5 +1,7 @@
 Credits
 =======
+  - _GXCommon.__decryptManufacturer corrected to decryptManufacturer.
+    * [mrv96](https://github.com/mrv96)
   - Object methods are fixed to call the correct client's method.
     * [Mahmoud Diab](https://github.com/mgehaddiab)
   - imageBlockTransfer issue fixed.
