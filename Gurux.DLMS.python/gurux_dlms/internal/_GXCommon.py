@@ -1557,7 +1557,7 @@ class _GXCommon:
             buff.setUInt16(0x8000)
         else:
             #  Add devitation.
-            d = int(dt.value.utcoffset().seconds / 60)
+            d = int(dt.value.utcoffset().total_seconds() / 60)
             if not (settings and settings.useUtc2NormalTime):
                 d = -d
             buff.setUInt16(d)
